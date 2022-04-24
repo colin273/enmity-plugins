@@ -56,7 +56,7 @@ const Freemoji: Plugin = {
     });
 
     // Patch stickers
-    patcher.instead(usability, "canUse StickersEverywhere", () => true);
+    patcher.instead(usability, "canUseStickersEverywhere", () => true);
     const { sendStickers } = messages;
     patcher.before(messages, "sendStickers", (_, args) => {
       const channel = getChannel(args[0]);
