@@ -12,7 +12,6 @@ const NoReplyMention: Plugin = {
   onStart() {
     patcher.before(pendingReplyModule, "createPendingReply", (_, args) => {
       args[0].shouldMention = false;
-      return args;
     });
   },
 

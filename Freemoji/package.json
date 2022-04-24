@@ -1,7 +1,7 @@
 {
-  "name": "no-reply-mention",
-  "description": "Disable reply pings by default",
-  "version": "1.0.0",
+  "name": "freemoji",
+  "description": "Send external emoji without Nitro as image links",
+  "version": "0.0.1",
   "author": {
     "name": "FifiTheBulldog"
   },
