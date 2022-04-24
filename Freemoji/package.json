@@ -1,7 +1,7 @@
 {
   "name": "freemoji",
   "description": "Send external emoji without Nitro as image links",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": {
     "name": "FifiTheBulldog"
   },

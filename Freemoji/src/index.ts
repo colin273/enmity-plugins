@@ -10,12 +10,12 @@ const { sendStickers } = messages;
 const [
   usability,
   { getEmojiURL },
-  { getStickerById },
+  //{ getStickerById },
   { getChannel }
 ] = bulk(
   filters.byProps("canUseEmojisEverywhere", "canUseAnimatedEmojis"),
   filters.byProps("getEmojiURL"),
-  filters.byProps("getStickerById"),
+  //filters.byProps("getStickerById"),
   filters.byProps("getChannel")
 )
 
@@ -55,7 +55,8 @@ const Freemoji: Plugin = {
       message.validNonShortcutEmojis = message.validNonShortcutEmojis.filter((e: Emoji) => e);
     });
 
-    // Patch stickers
+    // Patch stickers - TODO
+    /*
     patcher.instead(usability, "canUseStickersEverywhere", () => true);
     const { sendStickers } = messages;
     patcher.before(messages, "sendStickers", (_, args) => {
@@ -75,6 +76,7 @@ const Freemoji: Plugin = {
         messages.sendMessage(args[0], { content: stickerUrls.join("\n") });
       }
     });
+    */
   },
 
   onStop() {
