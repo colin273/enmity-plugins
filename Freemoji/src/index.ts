@@ -6,10 +6,14 @@ const patcher = create("freemoji");
 
 const [
   parserModule,
-  { getEmojiURL }
+  { getEmojiURL },
+  usability,
+  { getChannel }
 ] = bulk(
   filters.byProps("parse", "unparse", "parsePreprocessor"),
-  filters.byProps("getEmojiURL")
+  filters.byProps("getEmojiURL"),
+  filters.byProps("canUseEmojisEverywhere", "canUseAnimatedEmojis"),
+  filters.byProps("getChannel")
 )
 
 type Emoji = {
@@ -30,17 +34,22 @@ const Freemoji: Plugin = {
   name: "Freemoji",
 
   onStart() {
-    patcher.after(parserModule, "parse", (_, args, res) => {
-      res.validNonShortcutEmojis.forEach((emoji: Emoji, i: number) => {
-        if (true /* Change this later to test whether an emoji is available or not */) {
-          emoji.size = 24; // 1/2 of size we want
-          const url = getEmojiURL(emoji).replace("webp", "png");
-          res.content = res.content.replace(`<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`, url);
-          delete res.validNonShortcutEmojis[i];
+    patcher.after(usability, "canUseEmojisEverywhere", () => true);
+    patcher.after(usability, "canUseAnimatedEmojis", () => true);
+    patcher.before(window.enmity.modules.common.messages, "sendMessage", (_, [channelId, message]) => {
+      const channel = getChannel(channelId);
+      message.validNonShortcutEmojis.forEach((e: Emoji, i: number) => {
+        if (e.guildId !== channel.guild_id) {
+          e.size = 24;
+          message.content = message.content.replace(
+            `<${e.animated ? "a" : ""}:${e.name}:${e.id}>`,
+            getEmojiURL(e).replace("webp", "png")
+          )
+          delete message.validNonShortcutEmojis[i];
         }
-        res.validNonShortcutEmojis = res.validNonShortcutEmojis.filter((e: Emoji) => e);
-      });
-    })
+      })
+      message.validNonShortcutEmojis = message.validNonShortcutEmojis.filter((e: Emoji) => e);
+    });
   },
 
   onStop() {
