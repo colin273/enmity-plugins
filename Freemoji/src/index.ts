@@ -1,6 +1,6 @@
 import { Plugin, registerPlugin } from "enmity-api/plugins";
-import { bulk, filters } from "enmity-api/modules";
-import { create } from "enmity-api/patcher";
+import { bulk, filters, getByProps } from "enmity-api/modules";
+import { create, PatchCallback } from "enmity-api/patcher";
 import { fetchCurrentUser } from "enmity-api/users";
 
 const patcher = create("freemoji");
@@ -36,6 +36,28 @@ type Emoji = {
   size: number
 }
 
+/* WIP: proper lazy patch action sheet?
+type PatchType = "after"|"before"|"instead";
+
+const patchActionSheetLazy = (name: string, callback: PatchCallback, type: PatchType) => {
+  const mdl = getByProps("open" + name);
+  if (mdl) {
+    patcher[type](mdl, "open" + name, callback);
+    return;
+  }
+  const initPatchUninject = patcher.before(LazyActionSheet, "openLazy", (_, args) => {
+    const [ actionSheetRender, actionSheetName, actionSheetOpenArgs ] = args;
+    callback(_, actionSheetOpenArgs, null);
+    actionSheetRender.then(() => {
+      if 
+      const mdlTryAgain = getByProps("open" + name);
+      if (mdlTryAgain) {
+        patcher[type](mdl, "open" + name, callback);
+      }
+    });
+  })
+}*/
+
 const Freemoji: Plugin = {
   name: "Freemoji",
 
@@ -66,9 +88,14 @@ const Freemoji: Plugin = {
           message.validNonShortcutEmojis = message.validNonShortcutEmojis.filter((e: Emoji) => e);
         });
 
-        patcher.before(EmojiPickerActionSheet, "openEmojiPickerActionSheet", (_, [options]) => {
+        /*patchActionSheetLazy("EmojiPickerActionSheet", (_, [options]) => {
           isNotReacting = !(options.pickerIntention === 0);
-        });
+        }, "before");*/
+        patcher.before(LazyActionSheet, "openLazy", (_, args) => {
+          if (args[1] === "EmojiPickerActionSheet") {
+            isNotReacting = (args[2].pickerIntention === 0);
+          }
+        })
 
         patcher.after(LazyActionSheet, "hideActionSheet", () => {
           isNotReacting = true;
