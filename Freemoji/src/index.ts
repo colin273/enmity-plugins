@@ -6,16 +6,18 @@ import { fetchCurrentUser } from "enmity-api/users";
 const patcher = create("freemoji");
 
 const { messages } = window.enmity.modules.common;
-const { sendStickers } = messages;
+//const { sendStickers } = messages;
 
 const [
   Usability,
   EmojiPickerActionSheet,
+  LazyActionSheet,
   //{ getStickerById },
   { getChannel }
 ] = bulk(
   filters.byProps("canUseEmojisEverywhere", "canUseAnimatedEmojis"),
   filters.byProps("openEmojiPickerActionSheet"),
+  filters.byProps("openLazy", "hideActionSheet"),
   //filters.byProps("getStickerById"),
   filters.byProps("getChannel")
 )
@@ -38,40 +40,39 @@ const Freemoji: Plugin = {
   name: "Freemoji",
 
   onStart() {
+    /*patcher.after(LazyActionSheet, "openLazy", (_, args, res) => {
+      console.log("Opened an action sheet");
+      console.log(args);
+      console.log(res);
+    })*/
     fetchCurrentUser().then(({ premiumType }) => {
-      if (premiumType) {
+      if (!premiumType) {
         // Patch emoji
-        let isReacting = false;
-
-        patcher.instead(Usability, "canUseEmojisEverywhere", () => !isReacting);
-
-        patcher.instead(Usability, "canUseAnimatedEmojis", () => !isReacting);
-
+        // Do not modify default picker behavior for adding reactions
+        let isNotReacting = true;
+        patcher.instead(Usability, "canUseEmojisEverywhere", () => isNotReacting);
+        patcher.instead(Usability, "canUseAnimatedEmojis", () => isNotReacting);
         patcher.before(messages, "sendMessage", (_, [channelId, message]) => {
           const channel = getChannel(channelId);
           message.validNonShortcutEmojis.forEach((e: Emoji, i: number) => {
-            if (e.guildId !== channel.guild_id) {
-              e.size = 24; // getEmojiURL returns a size that is twice this value
+            if (e.guildId !== channel.guild_id || e.animated) {
               message.content = message.content.replace(
                 `<${e.animated ? "a" : ""}:${e.name}:${e.id}>`,
-                e.url.replace("webp", "png").replace(/=\d+/, "=48")
+                e.url.replace("webp", "png").replace(/size=\d+/, "size=48")
               )
               delete message.validNonShortcutEmojis[i];
             }
-          })
+          });
           message.validNonShortcutEmojis = message.validNonShortcutEmojis.filter((e: Emoji) => e);
         });
 
         patcher.before(EmojiPickerActionSheet, "openEmojiPickerActionSheet", (_, [options]) => {
-          isReacting = (options.pickerIntention === 0);
-          if (options.onPressEmoji && isReacting) {
-            const ogOnPressEmoji = options.onPressEmoji;
-            options.onPressEmoji = function (...onPressArgs: any[]) {
-              isReacting = false;
-              return ogOnPressEmoji(...onPressArgs);
-            };
-          }
+          isNotReacting = !(options.pickerIntention === 0);
         });
+
+        patcher.after(LazyActionSheet, "hideActionSheet", () => {
+          isNotReacting = true;
+        })
         
         // canUseEmojisEverywhere gets a single argument, the user object
         // Presumably so does canUseAnimatedEmojis

@@ -6,9 +6,10 @@ Ported from [nitro-spoof](https://github.com/luimu64/nitro-spoof) for [GooseMod]
 
 Planned features:
 
+- [x] Fix non-external animated emojis
 - [ ] Support non-animated stickers
 - [ ] Check whether sticker is animated, since animated stickers are APNG at best
 - [ ] Allow user to customize Nitro emoji size (48px is the default) either in settings or with a command
-- [ ] Check whether user already has Nitro, in case someone with Nitro tries to use this
+- [x] Check whether user already has Nitro, in case someone with Nitro tries to use this
 - [ ] Check whether user would be allowed to send external emojis in the current channel
 - [ ] Check whether user can embed links in the current channel
