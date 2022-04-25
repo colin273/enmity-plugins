@@ -10,13 +10,13 @@ const { messages } = window.enmity.modules.common;
 
 const [
   Usability,
-  EmojiPickerActionSheet,
+  //EmojiPickerActionSheet,
   LazyActionSheet,
   //{ getStickerById },
   { getChannel }
 ] = bulk(
   filters.byProps("canUseEmojisEverywhere", "canUseAnimatedEmojis"),
-  filters.byProps("openEmojiPickerActionSheet"),
+  //filters.byProps("openEmojiPickerActionSheet"),
   filters.byProps("openLazy", "hideActionSheet"),
   //filters.byProps("getStickerById"),
   filters.byProps("getChannel")
