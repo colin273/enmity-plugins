@@ -1,0 +1,31 @@
+{
+  "name": "create-webhooks",
+  "description": "Create webhooks from the webhook management screens",
+  "version": "0.0.1",
+  "author": {
+    "name": "FifiTheBulldog"
+  },
+  "scripts": {
+    "build": "rollup -c --configPlugin esbuild"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-node-resolve": "^13.2.1",
+    "@types/node": "^17.0.25",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.20.0",
+    "esbuild": "^0.14.36",
+    "eslint": "^8.13.0",
+    "rollup": "^2.70.2",
+    "rollup-plugin-esbuild": "^4.9.1"
+  },
+  "optionalDependencies": {
+    "esbuild-darwin-64": "^0.14.36",
+    "esbuild-darwin-arm64": "^0.14.36",
+    "esbuild-linux-64": "^0.14.36",
+    "esbuild-windows-64": "^0.14.36"
+  },
+  "dependencies": {
+    "enmity-api": "github:enmity-mod/enmity-api"
+  }
+}
