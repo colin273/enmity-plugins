@@ -1,13 +1,24 @@
 import { Plugin, registerPlugin } from "enmity-api/plugins";
-import { getModule, getByProps } from "enmity-api/modules";
+import { bulk, filters, getModule, getByProps } from "enmity-api/modules";
 import { create } from "enmity-api/patcher";
+import { showToast } from "enmity-api/toast";
 import { Button, React } from "enmity-api/react";
 
 import { findInReactTree } from "./findInReactTree";
 
 const patcher = create("create-webhooks");
 
-const { create: createWebhook } = getByProps("update", "create", "fetchForChannel");
+const [
+  { create: createWebhook },
+  { getChannels },
+  { can },
+  { Permissions: { MANAGE_WEBHOOKS } }
+] = bulk(
+  filters.byProps("update", "create", "fetchForChannel"),
+  filters.byProps("getChannels"),
+  filters.byProps("can", "_dispatcher"),
+  filters.byProps("Permissions")
+);
 const { NavigationContainer } = window.enmity.modules.common.navigationNative;
 const Strings = getModule(m => m?.default?.Messages?.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS)?.default?.Messages;
 const originalWebhooksUnavailableText = Strings.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS;
@@ -42,7 +53,7 @@ const CreateWebhooks: Plugin = {
     let currentGuild: string = undefined;
     let currentChannel: string = undefined;
 
-    patcher.after(NavigationContainer, "render", (_, [{theme}], res) => {
+    const renderPatch = patcher.after(NavigationContainer, "render", (_, [{theme}], res) => {
       const webhookScreen = findInReactTree(res, (o: any) => {
         return o?.screens?.WEBHOOKS;
       })?.screens?.WEBHOOKS;
@@ -54,11 +65,16 @@ const CreateWebhooks: Plugin = {
           color: buttonColor,
           title: "\uff0b", // Slightly larger + sign
           onPress: () => {
-            if (!currentChannel) {
-              if (!currentGuild) return; // Something is wrong, do nothing
-              // Assign currentChannel to first webhook manageable channel in guildId
+            let targetChannel: string = currentChannel;
+            if (!targetChannel) {
+              targetChannel = getChannels(currentGuild)
+                                .SELECTABLE
+                                .find((c: Record<string, any>) => can(
+                                  MANAGE_WEBHOOKS, c.channel
+                                ))?.channel?.id;
+              
             }
-            createWebhook(currentGuild, currentChannel);
+            createWebhook(currentGuild, targetChannel);
           }
         });
 
@@ -66,6 +82,8 @@ const CreateWebhooks: Plugin = {
           currentGuild = res?.props?.guildId;
           currentChannel = res?.props?.channelId;
         });
+
+        renderPatch.unpatchAll();
       }
     });
 
