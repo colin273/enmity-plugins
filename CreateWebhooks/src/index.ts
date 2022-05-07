@@ -22,7 +22,8 @@ const [
   filters.byProps("Permissions"),
   // filters.byProps("locale", "theme")
 );
-const { NavigationContainer } = window.enmity.modules.common.navigationNative;
+const { NavigationContainer } = window.enmity.modules.common.navigationNative
+                                ?? window.enmity.modules.common.NavigationNative;
 const Strings = getModule(m => m?.default?.Messages?.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS)?.default?.Messages;
 const originalWebhooksUnavailableText = Strings.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS;
 
