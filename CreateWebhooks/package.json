@@ -1,7 +1,7 @@
 {
   "name": "create-webhooks",
   "description": "Create webhooks from the webhook management screens",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": {
     "name": "FifiTheBulldog"
   },
