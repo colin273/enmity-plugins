@@ -1,7 +1,8 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@rollup/plugin-commonjs': ^21.1.0
+  '@rollup/plugin-json': ^4.1.0
   '@rollup/plugin-node-resolve': ^13.2.1
   '@types/node': ^17.0.25
   '@typescript-eslint/eslint-plugin': ^5.20.0
@@ -17,7 +18,7 @@ specifiers:
   rollup-plugin-esbuild: ^4.9.1
 
 dependencies:
-  enmity-api: github.com/enmity-mod/enmity-api/910485c8de6596c65c14f3185d727ee1ff2187d8
+  enmity-api: github.com/enmity-mod/enmity-api/d1af0b7ed1ce3634b4852a08fe7c0376252ebaa6
 
 optionalDependencies:
   esbuild-darwin-64: 0.14.36
@@ -27,14 +28,15 @@ optionalDependencies:
 
 devDependencies:
   '@rollup/plugin-commonjs': 21.1.0_rollup@2.70.2
+  '@rollup/plugin-json': 4.1.0_rollup@2.70.2
   '@rollup/plugin-node-resolve': 13.2.1_rollup@2.70.2
   '@types/node': 17.0.25
-  '@typescript-eslint/eslint-plugin': 5.20.0_659090a1a2f507e2e971a348ed10736d
+  '@typescript-eslint/eslint-plugin': 5.20.0_mwijbinc6ud6f2lruneo2edtnu
   '@typescript-eslint/parser': 5.20.0_eslint@8.13.0
   esbuild: 0.14.36
   eslint: 8.13.0
   rollup: 2.70.2
-  rollup-plugin-esbuild: 4.9.1_esbuild@0.14.36+rollup@2.70.2
+  rollup-plugin-esbuild: 4.9.1_spogcnvgx2zlfpppdv5errowom
 
 packages:
 
@@ -107,6 +109,15 @@ packages:
       rollup: 2.70.2
     dev: true
 
+  /@rollup/plugin-json/4.1.0_rollup@2.70.2:
+    resolution: {integrity: sha512-yfLbTdNS6amI/2OpmbiBoW12vngr5NW2jCJVZSBEz+H5KfUJZ2M7sDjk0U6GOOdCWFVScShte29o9NezJ53TPw==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.70.2
+      rollup: 2.70.2
+    dev: true
+
   /@rollup/plugin-node-resolve/13.2.1_rollup@2.70.2:
     resolution: {integrity: sha512-btX7kzGvp1JwShQI9V6IM841YKNPYjKCvUbNrQ2EcVYbULtUd/GH6wZ/qdqH13j9pOHBER+EZXNN2L8RSJhVRA==}
     engines: {node: '>= 10.0.0'}
@@ -164,7 +175,7 @@ packages:
       '@types/node': 17.0.25
     dev: true
 
-  /@typescript-eslint/eslint-plugin/5.20.0_659090a1a2f507e2e971a348ed10736d:
+  /@typescript-eslint/eslint-plugin/5.20.0_mwijbinc6ud6f2lruneo2edtnu:
     resolution: {integrity: sha512-fapGzoxilCn3sBtC6NtXZX6+P/Hef7VDbyfGqTTpzYydwhlkevB+0vE0EnmHPVTVSy68GUncyJ/2PcrFBeCo5Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -1135,7 +1146,7 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /rollup-plugin-esbuild/4.9.1_esbuild@0.14.36+rollup@2.70.2:
+  /rollup-plugin-esbuild/4.9.1_spogcnvgx2zlfpppdv5errowom:
     resolution: {integrity: sha512-qn/x7Wz9p3Xnva99qcb+nopH0d2VJwVnsxJTGEg+Sh2Z3tqQl33MhOwzekVo1YTKgv+yAmosjcBRJygMfGrtLw==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -1287,8 +1298,8 @@ packages:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
 
-  github.com/enmity-mod/enmity-api/910485c8de6596c65c14f3185d727ee1ff2187d8:
-    resolution: {tarball: https://codeload.github.com/enmity-mod/enmity-api/tar.gz/910485c8de6596c65c14f3185d727ee1ff2187d8}
+  github.com/enmity-mod/enmity-api/d1af0b7ed1ce3634b4852a08fe7c0376252ebaa6:
+    resolution: {tarball: https://codeload.github.com/enmity-mod/enmity-api/tar.gz/d1af0b7ed1ce3634b4852a08fe7c0376252ebaa6}
     name: enmity-api
     version: 1.0.8
     dev: false

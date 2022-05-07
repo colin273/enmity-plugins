@@ -2,6 +2,7 @@ import { Plugin, registerPlugin } from "enmity-api/plugins";
 import { bulk, filters, getByProps } from "enmity-api/modules";
 import { create, PatchCallback } from "enmity-api/patcher";
 import { fetchCurrentUser } from "enmity-api/users";
+import { version, description } from "../package.json" assert { type: "json"};
 
 const patcher = create("freemoji");
 
@@ -60,6 +61,15 @@ const patchActionSheetLazy = (name: string, callback: PatchCallback, type: Patch
 
 const Freemoji: Plugin = {
   name: "Freemoji",
+  // @ts-ignore
+  version,
+  description,
+  authors: [
+    {
+      name: "FifiTheBulldog",
+      id: "690213339862794285"
+    }
+  ],
 
   onStart() {
     /*patcher.after(LazyActionSheet, "openLazy", (_, args, res) => {
