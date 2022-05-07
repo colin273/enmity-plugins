@@ -1,7 +1,7 @@
 import { Plugin, registerPlugin } from "enmity-api/plugins";
 import { bulk, filters, getModule, getByProps } from "enmity-api/modules";
 import { create } from "enmity-api/patcher";
-import { showToast } from "enmity-api/toast";
+//import { showToast } from "enmity-api/toast";
 import { Button, React } from "enmity-api/react";
 import { version, description } from "../package.json" assert { type: "json"};
 
@@ -13,12 +13,14 @@ const [
   { create: createWebhook },
   { getChannels },
   { can },
-  { Permissions: { MANAGE_WEBHOOKS } }
+  { Permissions: { MANAGE_WEBHOOKS } },
+  // { locale }
 ] = bulk(
   filters.byProps("update", "create", "fetchForChannel"),
   filters.byProps("getChannels"),
   filters.byProps("can", "_dispatcher"),
-  filters.byProps("Permissions")
+  filters.byProps("Permissions"),
+  // filters.byProps("locale", "theme")
 );
 const { NavigationContainer } = window.enmity.modules.common.navigationNative;
 const Strings = getModule(m => m?.default?.Messages?.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS)?.default?.Messages;
@@ -65,20 +67,26 @@ const CreateWebhooks: Plugin = {
       if (webhookScreen) {
         const buttonColor = theme?.colors?.text ?? "#fff";
 
+        // TO DO: Use an Image with a + asset
+        // (proper assets API coming in Enmity rewrite, wait for now)
         webhookScreen.headerRight = () => React.createElement(Button, {
           color: buttonColor,
           title: "\uff0b", // Slightly larger + sign
           onPress: () => {
-            let targetChannel: string = currentChannel;
-            if (!targetChannel) {
-              targetChannel = getChannels(currentGuild)
-                                .SELECTABLE
-                                .find((c: Record<string, any>) => can(
-                                  MANAGE_WEBHOOKS, c.channel
-                                ))?.channel?.id;
-              
+            let targetChannel: string = currentChannel ||
+                                        getChannels(currentGuild)
+                                          .SELECTABLE
+                                          .find((c: Record<string, any>) => can(
+                                            MANAGE_WEBHOOKS, c.channel
+                                          ))?.channel?.id;
+            if (targetChannel) {
+              createWebhook(currentGuild, targetChannel);
+            } else {
+              // Maybe add asset later and use enmity-api's toasts functionality
+              window.enmity.toast.showToast({
+                content: "Error creating webhook"
+              });
             }
-            createWebhook(currentGuild, targetChannel);
           }
         });
 
