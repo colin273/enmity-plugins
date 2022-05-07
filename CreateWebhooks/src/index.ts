@@ -55,6 +55,13 @@ const CreateWebhooks: Plugin = {
   // @ts-ignore
   version,
   description,
+  authors: [
+    {
+      name: "FifiTheBulldog",
+      id: "690213339862794285"
+    }
+  ],
+  color: "#f9a418",
 
   onStart() {
     let currentGuild: string = undefined;

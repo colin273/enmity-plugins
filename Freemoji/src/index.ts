@@ -70,6 +70,7 @@ const Freemoji: Plugin = {
       id: "690213339862794285"
     }
   ],
+  color: "#f9a418",
 
   onStart() {
     /*patcher.after(LazyActionSheet, "openLazy", (_, args, res) => {
