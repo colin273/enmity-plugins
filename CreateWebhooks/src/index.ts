@@ -3,6 +3,7 @@ import { bulk, filters, getModule, getByProps } from "enmity-api/modules";
 import { create } from "enmity-api/patcher";
 import { showToast } from "enmity-api/toast";
 import { Button, React } from "enmity-api/react";
+import { version, description } from "../package.json" assert { type: "json"};
 
 import { findInReactTree } from "./findInReactTree";
 
@@ -48,6 +49,9 @@ const originalWebhooksUnavailableText = Strings.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS
 
 const CreateWebhooks: Plugin = {
   name: "CreateWebhooks",
+  // @ts-ignore
+  version,
+  description,
 
   onStart() {
     let currentGuild: string = undefined;
