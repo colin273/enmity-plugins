@@ -34,28 +34,6 @@ type Emoji = {
   size: number
 }
 
-/* WIP: proper lazy patch action sheet?
-type PatchType = "after"|"before"|"instead";
-
-const patchActionSheetLazy = (name: string, callback: PatchCallback, type: PatchType) => {
-  const mdl = getByProps("open" + name);
-  if (mdl) {
-    patcher[type](mdl, "open" + name, callback);
-    return;
-  }
-  const initPatchUninject = patcher.before(LazyActionSheet, "openLazy", (_, args) => {
-    const [ actionSheetRender, actionSheetName, actionSheetOpenArgs ] = args;
-    callback(_, actionSheetOpenArgs, null);
-    actionSheetRender.then(() => {
-      if 
-      const mdlTryAgain = getByProps("open" + name);
-      if (mdlTryAgain) {
-        patcher[type](mdl, "open" + name, callback);
-      }
-    });
-  })
-}*/
-
 const Freemoji: Plugin = {
   name: "Freemoji",
   // @ts-ignore
@@ -72,6 +50,7 @@ const Freemoji: Plugin = {
   onStart() {
     let isNotReacting = true;
 
+    // Do not modify default picker behavior for adding reactions
     patcher.before(LazyActionSheet, "openLazy", (_, [, sheetName, {pickerIntention}]) => {
       switch (sheetName) {
         case "EmojiPickerActionSheet":
@@ -92,10 +71,9 @@ const Freemoji: Plugin = {
       // @ts-ignore
       unpatchEntry();
       if (!premiumType) {
-        // Patch emoji
-        // Do not modify default picker behavior for adding reactions
         patcher.instead(Usability, "canUseEmojisEverywhere", () => isNotReacting);
         patcher.instead(Usability, "canUseAnimatedEmojis", () => isNotReacting);
+
         patcher.before(messages, "sendMessage", (_, [channelId, message]) => {
           const channel = getChannel(channelId);
           message.validNonShortcutEmojis.forEach((e: Emoji, i: number) => {
