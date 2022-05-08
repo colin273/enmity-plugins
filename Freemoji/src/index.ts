@@ -1,6 +1,6 @@
 import { Plugin, registerPlugin } from "enmity-api/plugins";
 import { bulk, filters } from "enmity-api/modules";
-import { create, PatchCallback } from "enmity-api/patcher";
+import { create } from "enmity-api/patcher";
 import { version, description } from "../package.json" assert { type: "json"};
 
 const patcher = create("freemoji");
