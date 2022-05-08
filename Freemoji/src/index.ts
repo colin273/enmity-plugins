@@ -1,7 +1,6 @@
 import { Plugin, registerPlugin } from "enmity-api/plugins";
-import { bulk, filters, getByProps } from "enmity-api/modules";
+import { bulk, filters } from "enmity-api/modules";
 import { create, PatchCallback } from "enmity-api/patcher";
-import { fetchCurrentUser } from "enmity-api/users";
 import { version, description } from "../package.json" assert { type: "json"};
 
 const patcher = create("freemoji");
@@ -11,17 +10,15 @@ const { messages } = window.enmity.modules.common;
 
 const [
   Usability,
-  //EmojiPickerActionSheet,
   LazyActionSheet,
   //{ getStickerById },
   { getChannel }
 ] = bulk(
   filters.byProps("canUseEmojisEverywhere", "canUseAnimatedEmojis"),
-  //filters.byProps("openEmojiPickerActionSheet"),
   filters.byProps("openLazy", "hideActionSheet"),
   //filters.byProps("getStickerById"),
   filters.byProps("getChannel")
-)
+);
 
 type Emoji = {
   roles: any[],
@@ -73,16 +70,30 @@ const Freemoji: Plugin = {
   color: "#f9a418",
 
   onStart() {
-    /*patcher.after(LazyActionSheet, "openLazy", (_, args, res) => {
-      console.log("Opened an action sheet");
-      console.log(args);
-      console.log(res);
-    })*/
-    fetchCurrentUser().then(({ premiumType }) => {
+    let isNotReacting = true;
+
+    patcher.before(LazyActionSheet, "openLazy", (_, [, sheetName, {pickerIntention}]) => {
+      switch (sheetName) {
+        case "EmojiPickerActionSheet":
+          // pickerIntention: 0 for reaction, 3 to search for a chat emoji
+          if (pickerIntention !== 0) {
+            break;
+          }
+        case "MessageLongPressActionSheet":
+          isNotReacting = false;
+      }
+    });
+
+    patcher.after(LazyActionSheet, "hideActionSheet", () => {
+      isNotReacting = true;
+    });
+
+    const unpatchEntry = patcher.before(Usability, "canUseEmojisEverywhere", (_, [{premiumType}]) => {
+      // @ts-ignore
+      unpatchEntry();
       if (!premiumType) {
         // Patch emoji
         // Do not modify default picker behavior for adding reactions
-        let isNotReacting = true;
         patcher.instead(Usability, "canUseEmojisEverywhere", () => isNotReacting);
         patcher.instead(Usability, "canUseAnimatedEmojis", () => isNotReacting);
         patcher.before(messages, "sendMessage", (_, [channelId, message]) => {
@@ -98,38 +109,6 @@ const Freemoji: Plugin = {
           });
           message.validNonShortcutEmojis = message.validNonShortcutEmojis.filter((e: Emoji) => e);
         });
-
-        /*patchActionSheetLazy("EmojiPickerActionSheet", (_, [options]) => {
-          isNotReacting = !(options.pickerIntention === 0);
-        }, "before");*/
-        patcher.before(LazyActionSheet, "openLazy", (_, args) => {
-          if (args[1] === "EmojiPickerActionSheet") {
-            isNotReacting = (args[2].pickerIntention === 0);
-          }
-        })
-
-        patcher.after(LazyActionSheet, "hideActionSheet", () => {
-          isNotReacting = true;
-        })
-        
-        // canUseEmojisEverywhere gets a single argument, the user object
-        // Presumably so does canUseAnimatedEmojis
-        // We don't necessarily need to patch these? Unless...
-        // But we do need to patch the modal
-        //   openEmojiPickerActionSheet
-        // Food for thought -- these are the logs of args and res for two
-        // different calls to openEmojiPickerActionSheet
-        // IIRC the first is from opening for reactions
-        // And the second is from opening to select a chat emoji
-        // Note the picker intention argument
-        // We can use this to determine whether to actually send anything
-        // Props:
-        //   - channel (channel object)
-        //   - onPressEmoji
-        //   - onClose (only for searching for a chat emoji)
-        //   - pickerIntention: 0 for reaction, 3 to search for a chat emoji
-        // OK, can't seem to find a module related to picker intention
-        // So we'll have to do this bit manually
         
         // Patch stickers - TODO
         /*
