@@ -5,7 +5,10 @@ import { version, description } from "../package.json" assert { type: "json"};
 
 const patcher = create("freemoji");
 
-const { messages } = window.enmity.modules.common;
+let { Messages } = window.enmity.modules.common;
+if (!Messages) {
+  Messages = window.enmity.modules.common.messages;
+}
 //const { sendStickers } = messages;
 
 const [
@@ -75,7 +78,7 @@ const Freemoji: Plugin = {
         patcher.instead(Usability, "canUseEmojisEverywhere", () => isNotReacting);
         patcher.instead(Usability, "canUseAnimatedEmojis", () => isNotReacting);
 
-        patcher.before(messages, "sendMessage", (_, [channelId, message]) => {
+        patcher.before(Messages, "sendMessage", (_, [channelId, message]) => {
           const channel = getChannel(channelId);
           message.validNonShortcutEmojis.forEach((e: Emoji, i: number) => {
             if (e.guildId !== channel.guild_id || e.animated) {
