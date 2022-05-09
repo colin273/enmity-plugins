@@ -24,6 +24,7 @@ type Emoji = {
   roles: any[],
   require_colons: boolean,
   name: string,
+  originalName?: string,
   managed: boolean,
   id: string,
   available: boolean,
@@ -79,7 +80,7 @@ const Freemoji: Plugin = {
           message.validNonShortcutEmojis.forEach((e: Emoji, i: number) => {
             if (e.guildId !== channel.guild_id || e.animated) {
               message.content = message.content.replace(
-                `<${e.animated ? "a" : ""}:${e.name}:${e.id}>`,
+                `<${e.animated ? "a" : ""}:${e.originalName ?? e.name}:${e.id}>`,
                 e.url.replace("webp", "png").replace(/size=\d+/, "size=48")
               )
               delete message.validNonShortcutEmojis[i];
