@@ -14,11 +14,13 @@ if (!Messages) {
 const [
   Usability,
   LazyActionSheet,
+  //SendableStickers,
   //{ getStickerById },
   { getChannel }
 ] = bulk(
   filters.byProps("canUseEmojisEverywhere", "canUseAnimatedEmojis"),
   filters.byProps("openLazy", "hideActionSheet"),
+  //filters.byProps("isSendableSticker"),
   //filters.byProps("getStickerById"),
   filters.byProps("getChannel")
 );
@@ -36,6 +38,18 @@ type Emoji = {
   allNamesString: string,
   guildId: string,
   size: number
+}
+
+enum PremiumTypes {
+  None,
+  Classic,
+  Nitro
+}
+
+enum StickerFormats {
+  PNG,
+  APNG,
+  Lottie
 }
 
 const Freemoji: Plugin = {
@@ -71,13 +85,17 @@ const Freemoji: Plugin = {
       isNotReacting = true;
     });
 
-    const unpatchEntry = patcher.before(Usability, "canUseEmojisEverywhere", (_, [{premiumType}]) => {
+    const unpatchEmojiEntry = patcher.before(Usability, "canUseEmojisEverywhere", (_, [{premiumType}]) => {
       // @ts-ignore
-      unpatchEntry();
-      if (!premiumType) {
+      unpatchEmojiEntry();
+
+      // Emojis everywhere available by default for regular and classic Nitro
+      if ((premiumType ?? 0) === PremiumTypes.None) {
+        // single argument for both: user object
         patcher.instead(Usability, "canUseEmojisEverywhere", () => isNotReacting);
         patcher.instead(Usability, "canUseAnimatedEmojis", () => isNotReacting);
 
+        // arguments: channel ID, message, two more
         patcher.before(Messages, "sendMessage", (_, [channelId, message]) => {
           const channel = getChannel(channelId);
           message.validNonShortcutEmojis.forEach((e: Emoji, i: number) => {
@@ -91,31 +109,45 @@ const Freemoji: Plugin = {
           });
           message.validNonShortcutEmojis = message.validNonShortcutEmojis.filter((e: Emoji) => e);
         });
-        
-        // Patch stickers - TODO
-        /*
-        patcher.instead(usability, "canUseStickersEverywhere", () => true);
-        const { sendStickers } = messages;
-        patcher.before(messages, "sendStickers", (_, args) => {
-          const channel = getChannel(args[0]);
-          const stickerUrls: string[] = [];
-          args[1].forEach((s: string, i: number) => {
-            const sticker = getStickerById(s);
-            if (sticker.guild_id !== channel.guild_id) {
-              stickerUrls.push(`https://media.discordapp.net/stickers/${s}?size=320`);
-              delete args[1][i];
-            }
-          })
-          args[1] = args[1].filter((s: string) => s);
-          if (args[1]) {
-            sendStickers(...args);
-          } else {
-            messages.sendMessage(args[0], { content: stickerUrls.join("\n") });
-          }
-        });
-        */
       }
     });
+
+    /*
+    It would be really nice if the sticker patch actually worked.
+    *
+    const unpatchStickersEntry = patcher.before(SendableStickers, "isSendableSticker", (_, [, {premiumType}]) => {
+      // @ts-ignore
+      unpatchStickersEntry();
+      
+      // Stickers everywhere available by default for regular Nitro only
+      if ((premiumType ?? 0) < PremiumTypes.Nitro) {
+        patcher.instead(SendableStickers, "isSendableSticker", (_, args, original) => {
+          // args: sticker, user, channel
+          switch (args[0].format_type) {
+            case StickerFormats.PNG:
+              return true;
+            default:
+              return original(...args);
+          }
+        });
+
+        patcher.instead(Usability, "canUseStickersEverywhere", () => true);
+
+        patcher.instead(Messages, "sendStickers", (_, args, original) => {
+          // args: channel ID, sticker ID, string (empty), object (empty)
+          const [channelId, [stickerId]] = args;
+          const channel = getChannel(channelId);
+          const sticker = getStickerById(stickerId);
+          if (channel.guild_id !== sticker.guild_id) { // condition needs to evaluate whether to replace sticker
+            return Messages.sendMessage(channelId, {
+              content: `https://media.discordapp.net/stickers/${stickerId}.png`
+            });
+          } else {
+            return original(...args);
+          }
+        });
+      }
+    });*/
   },
 
   onStop() {
