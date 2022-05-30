@@ -7,7 +7,6 @@ specifiers:
   '@types/node': ^17.0.25
   '@typescript-eslint/eslint-plugin': ^5.20.0
   '@typescript-eslint/parser': ^5.20.0
-  enmity-api: github:enmity-mod/enmity-api
   esbuild: ^0.14.36
   esbuild-darwin-64: ^0.14.36
   esbuild-darwin-arm64: ^0.14.36
@@ -16,9 +15,6 @@ specifiers:
   eslint: ^8.13.0
   rollup: ^2.70.2
   rollup-plugin-esbuild: ^4.9.1
-
-dependencies:
-  enmity-api: github.com/enmity-mod/enmity-api/d1af0b7ed1ce3634b4852a08fe7c0376252ebaa6
 
 optionalDependencies:
   esbuild-darwin-64: 0.14.38
@@ -1297,9 +1293,3 @@ packages:
   /yallist/4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
-
-  github.com/enmity-mod/enmity-api/d1af0b7ed1ce3634b4852a08fe7c0376252ebaa6:
-    resolution: {tarball: https://codeload.github.com/enmity-mod/enmity-api/tar.gz/d1af0b7ed1ce3634b4852a08fe7c0376252ebaa6}
-    name: enmity-api
-    version: 1.0.8
-    dev: false

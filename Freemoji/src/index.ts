@@ -1,15 +1,11 @@
-import { Plugin, registerPlugin } from "enmity-api/plugins";
-import { bulk, filters } from "enmity-api/modules";
-import { create } from "enmity-api/patcher";
+import { Plugin, registerPlugin } from "enmity/managers/plugins";
+import { bulk, filters } from "enmity/metro";
+import { Messages } from "enmity/metro/common";
+import { create } from "enmity/patcher";
 import { version, description } from "../package.json" assert { type: "json"};
 
 const patcher = create("freemoji");
-
-let { Messages } = window.enmity.modules.common;
-if (!Messages) {
-  Messages = window.enmity.modules.common.messages;
-}
-//const { sendStickers } = messages;
+//const { sendStickers } = Messages;
 
 const [
   Usability,

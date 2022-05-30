@@ -1,0 +1,13 @@
+lockfileVersion: 5.4
+
+specifiers:
+  enmity: ^1.1.8
+
+devDependencies:
+  enmity: 1.1.8
+
+packages:
+
+  /enmity/1.1.8:
+    resolution: {integrity: sha512-gSzCYuVa6BhPVrmuDtZED9xOZ1uabu1QaCHAYYBOFQi2fyTzlA+saqPshlS2TUQWuFLUX5Dn2O9h1Y+u5bEvtw==}
+    dev: true

@@ -1,11 +1,11 @@
-import { Plugin, registerPlugin } from "enmity-api/plugins";
-import { bulk, filters, getModule, getByProps } from "enmity-api/modules";
-import { create } from "enmity-api/patcher";
-//import { showToast } from "enmity-api/toast";
-import { Button, React } from "enmity-api/react";
+import { Plugin, registerPlugin } from "enmity/managers/plugins";
+import { bulk, filters, getModule, getByProps } from "enmity/metro";
+import { NavigationNative, React, Toasts } from "enmity/metro/common";
+import { create } from "enmity/patcher";
+import { Button } from "enmity/components";
 import { version, description } from "../package.json" assert { type: "json"};
 
-import { findInReactTree } from "./findInReactTree";
+import findInReactTree from "enmity/utilities/findInReactTree";
 
 const patcher = create("create-webhooks");
 
@@ -14,17 +14,17 @@ const [
   { getChannels },
   { can },
   { Permissions: { MANAGE_WEBHOOKS } },
+  { default: { Messages: Strings } }
   // { locale }
 ] = bulk(
   filters.byProps("update", "create", "fetchForChannel"),
   filters.byProps("getChannels"),
   filters.byProps("can", "_dispatcher"),
   filters.byProps("Permissions"),
+  (m => m?.default?.Messages?.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS)
   // filters.byProps("locale", "theme")
 );
-const { NavigationContainer } = window.enmity.modules.common.navigationNative
-                                ?? window.enmity.modules.common.NavigationNative;
-const Strings = getModule(m => m?.default?.Messages?.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS)?.default?.Messages;
+
 const originalWebhooksUnavailableText = Strings.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS;
 
 // Res of webhook overview render:
@@ -52,7 +52,6 @@ const originalWebhooksUnavailableText = Strings.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS
 
 const CreateWebhooks: Plugin = {
   name: "CreateWebhooks",
-  // @ts-ignore
   version,
   description,
   authors: [
@@ -67,7 +66,9 @@ const CreateWebhooks: Plugin = {
     let currentGuild: string = undefined;
     let currentChannel: string = undefined;
 
-    const renderPatch = patcher.after(NavigationContainer, "render", (_, [{theme}], res) => {
+    const unpatchEntry = patcher.after(NavigationNative.NavigationContainer, "render", (_, [{theme}], res) => {
+      unpatchEntry();
+
       const webhookScreen = findInReactTree(res, (o: any) => {
         return o?.screens?.WEBHOOKS;
       })?.screens?.WEBHOOKS;
@@ -91,7 +92,7 @@ const CreateWebhooks: Plugin = {
               createWebhook(currentGuild, targetChannel);
             } else {
               // Maybe add asset later and use enmity-api's toasts functionality
-              window.enmity.toast.showToast({
+              Toasts.open({
                 content: "Error creating webhook"
               });
             }
@@ -102,8 +103,6 @@ const CreateWebhooks: Plugin = {
           currentGuild = res?.props?.guildId;
           currentChannel = res?.props?.channelId;
         });
-
-        renderPatch.unpatchAll();
       }
     });
 
