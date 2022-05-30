@@ -1,4 +1,4 @@
-import { defineConfig, Plugin } from "rollup";
+import { defineConfig } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
@@ -27,7 +27,7 @@ export default defineConfig({
   ]
 });
 
-function createPluginJson(options = {}): Plugin {
+function createPluginJson() {
   return {
     name: 'plugin-info',
     writeBundle: (err) => {

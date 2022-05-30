@@ -27,7 +27,7 @@ export default defineConfig({
   ]
 });
 
-function createPluginJson(options = {}): Plugin {
+function createPluginJson() {
   return {
     name: 'plugin-info',
     writeBundle: (err) => {
