@@ -1,9 +1,9 @@
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
-import { bulk, filters, getModule, getByProps } from "enmity/metro";
+import { bulk, filters } from "enmity/metro";
 import { NavigationNative, React, Toasts } from "enmity/metro/common";
 import { create } from "enmity/patcher";
 import { Button } from "enmity/components";
-import { version, description } from "../package.json" assert { type: "json"};
+import metadata from "../manifest.json" assert { type: "json"};
 
 import findInReactTree from "enmity/utilities/findInReactTree";
 
@@ -51,16 +51,7 @@ const originalWebhooksUnavailableText = Strings.SETTINGS_WEBHOOKS_EMPTY_BODY_IOS
 */
 
 const CreateWebhooks: Plugin = {
-  name: "CreateWebhooks",
-  version,
-  description,
-  authors: [
-    {
-      name: "FifiTheBulldog",
-      id: "690213339862794285"
-    }
-  ],
-  color: "#f9a418",
+  ...metadata,
 
   onStart() {
     let currentGuild: string = undefined;
@@ -74,7 +65,7 @@ const CreateWebhooks: Plugin = {
       })?.screens?.WEBHOOKS;
 
       if (webhookScreen) {
-        const buttonColor = theme?.colors?.text ?? "#fff";
+        const buttonColor: string = theme?.colors?.text ?? "#fff";
 
         // TO DO: Use an Image with a + asset
         // (proper assets API coming in Enmity rewrite, wait for now)

@@ -2,7 +2,7 @@ import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { bulk, filters } from "enmity/metro";
 import { Messages } from "enmity/metro/common";
 import { create } from "enmity/patcher";
-import { version, description } from "../package.json" assert { type: "json"};
+import metadata from "../manifest.json" assert { type: "json"};
 
 const patcher = create("freemoji");
 //const { sendStickers } = Messages;
@@ -49,17 +49,7 @@ enum StickerFormats {
 }
 
 const Freemoji: Plugin = {
-  name: "Freemoji",
-  // @ts-ignore
-  version,
-  description,
-  authors: [
-    {
-      name: "FifiTheBulldog",
-      id: "690213339862794285"
-    }
-  ],
-  color: "#f9a418",
+  ...metadata,
 
   onStart() {
     let isNotReacting = true;

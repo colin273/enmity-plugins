@@ -1,0 +1,12 @@
+{
+  "name": "NoReplyMention",
+  "description": "Disable reply pings by default",
+  "version": "1.0.2",
+  "color": "#f9a418",
+  "authors": [
+    {
+      "name": "FifiTheBulldog",
+      "id": "690213339862794285"
+    }
+  ]
+}

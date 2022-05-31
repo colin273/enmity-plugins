@@ -1,0 +1,12 @@
+{
+  "name": "CreateWebhooks",
+  "description": "Create webhooks from the webhook management screens",
+  "version": "1.0.0",
+  "color": "#f9a418",
+  "authors": [
+    {
+      "name": "FifiTheBulldog",
+      "id": "690213339862794285"
+    }
+  ]
+}
