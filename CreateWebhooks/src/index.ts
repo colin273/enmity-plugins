@@ -3,7 +3,7 @@ import { bulk, filters } from "enmity/metro";
 import { NavigationNative, React, Toasts } from "enmity/metro/common";
 import { create } from "enmity/patcher";
 import { Button } from "enmity/components";
-import metadata from "../manifest.json" assert { type: "json"};
+import metadata from "../manifest.json" assert { type: "json" };
 
 import findInReactTree from "enmity/utilities/findInReactTree";
 
@@ -57,8 +57,8 @@ const CreateWebhooks: Plugin = {
     let currentGuild: string = undefined;
     let currentChannel: string = undefined;
 
-    const unpatchEntry = patcher.after(NavigationNative.NavigationContainer, "render", (_, [{theme}], res) => {
-      unpatchEntry();
+    patcher.after(NavigationNative.NavigationContainer, "render", (_, [{theme}], res) => {
+      let channelIdsUnpatch: () => void;
 
       const webhookScreen = findInReactTree(res, (o: any) => {
         return o?.screens?.WEBHOOKS;
@@ -90,7 +90,8 @@ const CreateWebhooks: Plugin = {
           }
         });
 
-        patcher.after(webhookScreen, "render", (_, args, res) => {
+        channelIdsUnpatch();
+        channelIdsUnpatch = patcher.after(webhookScreen, "render", (_, args, res) => {
           currentGuild = res?.props?.guildId;
           currentChannel = res?.props?.channelId;
         });

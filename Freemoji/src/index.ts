@@ -2,7 +2,7 @@ import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { bulk, filters } from "enmity/metro";
 import { Messages } from "enmity/metro/common";
 import { create } from "enmity/patcher";
-import metadata from "../manifest.json" assert { type: "json"};
+import metadata from "../manifest.json" assert { type: "json" };
 
 const patcher = create("freemoji");
 //const { sendStickers } = Messages;

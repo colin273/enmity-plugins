@@ -1,7 +1,7 @@
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { getByProps } from "enmity/metro";
 import { create } from "enmity/patcher";
-import metadata from "../manifest.json" assert { type: "json"};
+import metadata from "../manifest.json" assert { type: "json" };
 
 const patcher = create("no-reply-mention");
 
