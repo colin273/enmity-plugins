@@ -32,6 +32,6 @@
     "@types/lodash": "^4.14.182",
     "@types/react": "^18.0.9",
     "@types/react-native": "^0.67.7",
-    "enmity": "^1.1.8"
+    "enmity": "^1.2.0"
   }
 }

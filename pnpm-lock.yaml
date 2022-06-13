@@ -10,7 +10,7 @@ specifiers:
   '@types/react-native': ^0.67.7
   '@typescript-eslint/eslint-plugin': ^5.26.0
   '@typescript-eslint/parser': ^5.26.0
-  enmity: ^1.1.8
+  enmity: ^1.2.0
   esbuild: ^0.14.42
   esbuild-darwin-64: ^0.14.42
   esbuild-darwin-arm64: ^0.14.42
@@ -24,13 +24,13 @@ dependencies:
   '@types/lodash': 4.14.182
   '@types/react': 18.0.9
   '@types/react-native': 0.67.7
-  enmity: 1.1.8
+  enmity: 1.2.0
 
 optionalDependencies:
-  esbuild-darwin-64: 0.14.42
-  esbuild-darwin-arm64: 0.14.42
-  esbuild-linux-64: 0.14.42
-  esbuild-windows-64: 0.14.42
+  esbuild-darwin-64: 0.14.43
+  esbuild-darwin-arm64: 0.14.43
+  esbuild-linux-64: 0.14.43
+  esbuild-windows-64: 0.14.43
 
 devDependencies:
   '@rollup/plugin-commonjs': 22.0.0_rollup@2.75.3
@@ -476,8 +476,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /enmity/1.1.8:
-    resolution: {integrity: sha512-gSzCYuVa6BhPVrmuDtZED9xOZ1uabu1QaCHAYYBOFQi2fyTzlA+saqPshlS2TUQWuFLUX5Dn2O9h1Y+u5bEvtw==}
+  /enmity/1.2.0:
+    resolution: {integrity: sha512-OTb0t2xD2HA5eONcLk3IsPXJdxPhnKuTk4k1BRBZIlOnsg7sP35681Ti+nrMgnGNE/hXSSsmAU6P6x9ldHbKvw==}
     dev: false
 
   /es-module-lexer/0.9.3:
@@ -508,6 +508,16 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: true
+    optional: true
+
+  /esbuild-darwin-64/0.14.43:
+    resolution: {integrity: sha512-/3PSilx011ttoieRGkSZ0XV8zjBf2C9enV4ScMMbCT4dpx0mFhMOpFnCHkOK0pWGB8LklykFyHrWk2z6DENVUg==}
+    engines: {node: '>=12'}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
     optional: true
 
   /esbuild-darwin-arm64/0.14.42:
@@ -516,6 +526,16 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: true
+    optional: true
+
+  /esbuild-darwin-arm64/0.14.43:
+    resolution: {integrity: sha512-1HyFUKs8DMCBOvw1Qxpr5Vv/ThNcVIFb5xgXWK3pyT40WPvgYIiRTwJCvNs4l8i5qWF8/CK5bQxJVDjQvtv0Yw==}
+    engines: {node: '>=12'}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
     optional: true
 
   /esbuild-freebsd-64/0.14.42:
@@ -551,6 +571,16 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
+    optional: true
+
+  /esbuild-linux-64/0.14.43:
+    resolution: {integrity: sha512-EwINwGMyiJMgBby5/SbMqKcUhS5AYAZ2CpEBzSowsJPNBJEdhkCTtEjk757TN/wxgbu3QklqDM6KghY660QCUw==}
+    engines: {node: '>=12'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
     optional: true
 
   /esbuild-linux-arm/0.14.42:
@@ -649,6 +679,16 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: true
+    optional: true
+
+  /esbuild-windows-64/0.14.43:
+    resolution: {integrity: sha512-8NsuNfI8xwFuJbrCuI+aBqNTYkrWErejFO5aYM+yHqyHuL8mmepLS9EPzAzk8rvfaJrhN0+RvKWAcymViHOKEw==}
+    engines: {node: '>=12'}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: false
     optional: true
 
   /esbuild-windows-arm64/0.14.42:
