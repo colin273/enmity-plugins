@@ -58,7 +58,7 @@ const CreateWebhooks: Plugin = {
     let currentChannel: string = undefined;
 
     patcher.after(NavigationNative.NavigationContainer, "render", (_, [{theme}], res) => {
-      let channelIdsUnpatch: () => void;
+      let channelIdsUnpatch: () => void = () => {};
 
       const webhookScreen = findInReactTree(res, (o: any) => {
         return o?.screens?.WEBHOOKS;
