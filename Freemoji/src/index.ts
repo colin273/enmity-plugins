@@ -33,8 +33,6 @@ type Emoji = {
   size: number
 }
 
-let originalUsabilityDefault;
-
 const Freemoji: Plugin = {
   ...metadata,
 
@@ -60,13 +58,8 @@ const Freemoji: Plugin = {
 
     // The default export of the Nitro capabilities module is a frozen object
     // Therefore, we can't patch it directly
-    // Solution: make our own version with the patches we want
-    originalUsabilityDefault = usability.default;
-    usability.default = {
-      ...usability.default,
-      canUseEmojisEverywhere: () => isNotReacting,
-      canUseAnimatedEmojis: () => isNotReacting
-    };
+    // Solution: soften it up with a shallow copy
+    usability.default = { ...usability.default };
 
     // arguments: channel ID, message, two more
     patcher.before(Messages, "sendMessage", (_, [channelId, message]) => {
@@ -82,11 +75,13 @@ const Freemoji: Plugin = {
       });
       message.validNonShortcutEmojis = message.validNonShortcutEmojis.filter((e: Emoji) => e);
     });
+
+    patcher.instead(usability.default, "canUseEmojisEverywhere", () => isNotReacting);
+    patcher.instead(usability.default, "canUseAnimatedEmojis", () => isNotReacting);
   },
 
   onStop() {
     patcher.unpatchAll();
-    usability.default = originalUsabilityDefault;
   }
 };
 
