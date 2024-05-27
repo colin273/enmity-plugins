@@ -27,7 +27,6 @@ type Emoji = {
   id: string,
   available: boolean,
   animated: boolean,
-  url: string,
   allNamesString: string,
   guildId: string,
   size: number
@@ -68,8 +67,8 @@ const Freemoji: Plugin = {
         if (e.guildId !== channel.guild_id || e.animated) {
           message.content = message.content.replace(
             `<${e.animated ? "a" : ""}:${e.originalName ?? e.name}:${e.id}>`,
-            e.url.replace("webp", "png").replace(/size=\d+/, "size=48")
-          )
+            `https://cdn.discordapp.com/emojis/${e.id}.${e.animated ? "gif" : "png"}?size=48&quality=lossless`
+          );
           delete message.validNonShortcutEmojis[i];
         }
       });
